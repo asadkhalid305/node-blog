@@ -13,7 +13,7 @@ const mongoDbUri = 'mongodb+srv://aahad:aahadtest1234@expressblogsite.y9kmb.mong
 mongoose.connect(mongoDbUri).then(res => {
   console.log('-----Connected to DB!-----')
   // listen for requests
-  app.listen(3000);
+  app.listen(process.env.PORT || 3000);
 }).catch(err => {
   console.log('-----Unable to connect to DB!-----')
 })
