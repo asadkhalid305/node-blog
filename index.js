@@ -1,34 +1,35 @@
 const Http = require("http");
-const express = require('express');
-const morgan = require('morgan');
-const mongoose = require('mongoose');
-const blogRoutes = require('./routes/blogs');
+const express = require("express");
+const morgan = require("morgan");
+const mongoose = require("mongoose");
+const blogRoutes = require("./routes/blogs");
 
 // express app
 const app = express();
 
 // register view engine
-app.set('view engine', 'ejs');
+app.set("view engine", "ejs");
 // use middleware for static files
-app.use(express.static('public'));
+app.use(express.static("public"));
 // url encoding middleware
-app.use(express.urlencoded({ extended: true }))
+app.use(express.urlencoded({ extended: true }));
 // use morgan to log
-app.use(morgan('dev'));
+app.use(morgan("dev"));
 
 //creating server
 const server = Http.createServer(app);
 const port = process.env.PORT || 3000;
 
 // mongoDbURI
-const mongoDbUri = 'mongodb+srv://aahad:aahadtest1234@expressblogsite.y9kmb.mongodb.net/expressblogdatabase?retryWrites=true&w=majority'
+const mongoDbUri =
+  "mongodb+srv://aahad:aahadtest1234@expressblogsite.y9kmb.mongodb.net/expressblogdatabase?retryWrites=true&w=majority";
 
 // connect mongoDb with mongoose
 mongoose.connect(mongoDbUri, {
   useNewUrlParser: true,
   useFindAndModify: false,
-  useUnifiedTopology: true
-})
+  useUnifiedTopology: true,
+});
 
 const db = mongoose.connection;
 
@@ -45,15 +46,22 @@ db.on("connected", () => {
   });
 });
 
-app.get('/', (req, res) => {
-  res.redirect('/blogs');
+app.get("/login", (req, res) => {
+  res.status(200).send({
+    status: "success",
+    message: "user logged in successfully",
+  });
 });
-app.get('/about', (req, res) => {
-  res.render('about', { title: 'About' });
+
+app.get("/", (req, res) => {
+  res.redirect("/blogs");
 });
-app.use('/blogs',blogRoutes);
+app.get("/about", (req, res) => {
+  res.render("about", { title: "About" });
+});
+app.use("/blogs", blogRoutes);
 
 // 404 page
 app.use((req, res) => {
-  res.status(404).render('404', { title: '404' });
+  res.status(404).render("404", { title: "404" });
 });
